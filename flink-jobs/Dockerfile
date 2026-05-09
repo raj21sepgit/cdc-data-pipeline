@@ -9,7 +9,7 @@ RUN mvn package -DskipTests -q && \
     cp target/cdc-flink-jobs-1.0.0.jar /app/jobs/revenue-aggregates-job.jar && \
     cp target/cdc-flink-jobs-1.0.0.jar /app/jobs/customer-360-job.jar
 
-FROM flink:1.18.1-scala_2.12-java11
+FROM flink:1.18.1-scala_2.12-java17
 WORKDIR /app
 COPY --from=build /app/jobs ./jobs
 # flink CLI is on PATH in the Flink base image

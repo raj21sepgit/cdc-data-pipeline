@@ -1,3 +1,4 @@
+
 version: "3.9"
 
 # CDC Pipeline: MySQL → Debezium → Kafka → Flink → Elasticsearch → Kibana
@@ -98,7 +99,7 @@ services:
 
   # ── Stream Processing ────────────────────────────────────────────────────
   flink-jobmanager:
-    image: flink:1.18.1-scala_2.12-java11
+    image: flink:1.18.1-scala_2.12-java17
     ports:
       - "8081:8081"
     command: jobmanager
@@ -112,7 +113,7 @@ services:
         execution.checkpointing.interval: 30s
 
   flink-taskmanager:
-    image: flink:1.18.1-scala_2.12-java11
+    image: flink:1.18.1-scala_2.12-java17
     depends_on:
       - flink-jobmanager
     command: taskmanager
@@ -134,7 +135,7 @@ services:
 
   # ── Sink ─────────────────────────────────────────────────────────────────
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.21
     ports:
       - "9200:9200"
     environment:
@@ -154,7 +155,7 @@ services:
       retries: 20
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.13.4
+    image: docker.elastic.co/kibana/kibana:7.17.21
     depends_on:
       elasticsearch:
         condition: service_healthy

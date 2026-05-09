@@ -63,8 +63,7 @@ public class Customer360Job {
                 first_name STRING,
                 last_name  STRING,
                 city       STRING,
-                tier       STRING,
-                PRIMARY KEY (id) NOT ENFORCED
+                tier       STRING
             ) WITH (
                 'connector'                    = 'kafka',
                 'topic'                        = 'cdc.ecommerce.customers',
@@ -115,7 +114,7 @@ public class Customer360Job {
                 LAST_VALUE(o.channel)                     AS preferred_channel,
                 CURRENT_TIMESTAMP                        AS computed_at
             FROM c360_orders AS o
-            JOIN c360_customers FOR SYSTEM_TIME AS OF o.created_at AS c
+            JOIN c360_customers AS c
                 ON o.customer_id = c.id
             WHERE o.__op <> 'd'
               AND o.status <> 'CANCELLED'

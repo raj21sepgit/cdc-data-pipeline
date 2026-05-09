@@ -66,8 +66,7 @@ public class RevenueAggregatesJob {
                 sku       STRING,
                 name      STRING,
                 category  STRING,
-                price     DOUBLE,
-                PRIMARY KEY (id) NOT ENFORCED
+                price     DOUBLE
             ) WITH (
                 'connector'                    = 'kafka',
                 'topic'                        = 'cdc.ecommerce.products',
@@ -111,7 +110,7 @@ public class RevenueAggregatesJob {
                 SUM(o.total_amount)                               AS total_revenue,
                 AVG(o.total_amount)                               AS avg_order_value
             FROM raw_orders AS o
-            LEFT JOIN dim_products FOR SYSTEM_TIME AS OF o.created_at AS p
+            LEFT JOIN dim_products AS p
                 ON o.product_id = p.id
             WHERE o.__op <> 'd'
               AND o.status <> 'CANCELLED'

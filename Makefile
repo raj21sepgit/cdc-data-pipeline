@@ -29,9 +29,9 @@ seed:
 jobs:
 	@echo "Submitting Flink jobs..."
 	docker compose exec flink-jobs bash -c "\
-		flink run -d -m flink-jobmanager:8081 /app/jobs/enriched-orders-job.jar && \
-		flink run -d -m flink-jobmanager:8081 /app/jobs/revenue-aggregates-job.jar && \
-		flink run -d -m flink-jobmanager:8081 /app/jobs/customer-360-job.jar \
+		flink run -d -m flink-jobmanager:8081 -c com.cdc.jobs.EnrichedOrdersJob /app/jobs/enriched-orders-job.jar && \
+		flink run -d -m flink-jobmanager:8081 -c com.cdc.jobs.RevenueAggregatesJob /app/jobs/revenue-aggregates-job.jar && \
+		flink run -d -m flink-jobmanager:8081 -c com.cdc.jobs.Customer360Job /app/jobs/customer-360-job.jar \
 		|| echo 'Note: compile jobs first with: docker compose exec flink-jobs mvn package'"
 
 kibana:
