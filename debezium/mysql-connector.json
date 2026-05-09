@@ -1,0 +1,35 @@
+{
+  "name": "mysql-ecommerce",
+  "config": {
+    "connector.class":                        "io.debezium.connector.mysql.MySqlConnector",
+    "database.hostname":                      "mysql",
+    "database.port":                          "3306",
+    "database.user":                          "debezium",
+    "database.password":                      "debezium",
+    "database.server.id":                     "184054",
+    "topic.prefix":                           "cdc",
+    "database.include.list":                  "ecommerce",
+    "table.include.list":                     "ecommerce.orders,ecommerce.customers,ecommerce.products",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:29092",
+    "schema.history.internal.kafka.topic":    "schema-changes.ecommerce",
+    "include.schema.changes":                 "false",
+
+    "snapshot.mode":                          "initial",
+    "snapshot.locking.mode":                  "none",
+
+    "transforms":                             "unwrap",
+    "transforms.unwrap.type":                 "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones":      "false",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "transforms.unwrap.add.fields":           "op,table,source.ts_ms",
+
+    "key.converter":                          "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter":                        "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable":           "false",
+    "value.converter.schemas.enable":         "false",
+
+    "heartbeat.interval.ms":                  "5000",
+    "max.batch.size":                         "2048",
+    "poll.interval.ms":                       "1000"
+  }
+}

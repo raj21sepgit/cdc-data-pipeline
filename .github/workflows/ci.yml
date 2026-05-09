@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-flink-jobs:
+    name: Build Flink jobs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build and package
+        working-directory: flink-jobs
+        run: mvn package -DskipTests -q
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: flink-jobs-jar
+          path: flink-jobs/target/cdc-flink-jobs-*.jar
+
+  validate-connector-config:
+    name: Validate Debezium connector JSON
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON
+        run: python3 -c "import json; json.load(open('debezium/mysql-connector.json'))"
+
+  docker-compose-check:
+    name: Validate docker-compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config --quiet
